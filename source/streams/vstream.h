@@ -448,7 +448,7 @@ class VStream {
         /**
         Preflights the stream's buffer so that it can have the specified
         number of bytes written to it subsequently. Throws a VException
-        if the buffer cannot be expanded to accomodate the data.
+        if the buffer cannot be expanded to accommodate the data.
         @param    numBytesToWrite    the number of bytes that will be written
         */
         virtual void _prepareToWrite(Vs64 numBytesToWrite);

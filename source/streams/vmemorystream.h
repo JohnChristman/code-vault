@@ -23,7 +23,7 @@ as necessary.
 
 Normally VMemoryStream allocates its own buffer; however, you may supply it
 with a buffer you have already allocated, though if VMemoryStream needs to
-expand the buffer to accomodate a write, it will delete your buffer and
+expand the buffer to accommodate a write, it will delete your buffer and
 allocate a new one.
 
 You specify a resize increment by which the buffer will be expanded when it
@@ -230,7 +230,7 @@ class VMemoryStream : public VStream {
         /**
         Preflights the stream's buffer so that it can have the specified
         number of bytes written to it subsequently. Throws a VException
-        if the buffer cannot be expanded to accomodate the data.
+        if the buffer cannot be expanded to accommodate the data.
         @param    numBytesToWrite    the number of bytes that will be written
         */
         virtual void _prepareToWrite(Vs64 numBytesToWrite);

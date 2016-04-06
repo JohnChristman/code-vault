@@ -289,9 +289,15 @@ const VString& VFSNode::getPath() const {
 }
 
 void VFSNode::getName(VString& name) const {
-    // The following works even if lastIndexOf returns -1 "not found",
-    // because we add 1 to get the correct startIndex parameter.
-    name.copyFromBuffer(mPath.chars(), mPath.lastIndexOf('/') + 1, mPath.length());
+	// the path portion might just be the volume name which is not the name of the file
+	if (mPath.length() == 2 && mPath.lastIndexOf(':') == 1){
+		name.copyFromCString("");
+	}
+	else {
+		// The following works even if lastIndexOf returns -1 "not found",
+		// because we add 1 to get the correct startIndex parameter.
+		name.copyFromBuffer(mPath.chars(), mPath.lastIndexOf('/') + 1, mPath.length());
+	}
 }
 
 VString VFSNode::getName() const {
@@ -309,7 +315,12 @@ void VFSNode::setName(const VString& name) {
 }
 
 void VFSNode::getParentPath(VString& parentPath) const {
-    parentPath.copyFromBuffer(mPath.chars(), 0, mPath.lastIndexOf('/'));
+	if (mPath.length() == 2 && mPath.lastIndexOf(':') == 1){
+		parentPath.copyFromCString(mPath.chars());
+	}
+	else {
+		parentPath.copyFromBuffer(mPath.chars(), 0, mPath.lastIndexOf('/'));
+	}
 }
 
 void VFSNode::getParentNode(VFSNode& parent) const {
@@ -517,10 +528,18 @@ bool VFSNode::isFile() const {
 }
 
 bool VFSNode::isDirectory() const {
-    VFSNodeInfo info;
-    bool nodeExists = this->_platform_getNodeInfo(info);
 
-    return nodeExists && info.mIsDirectory;
+	// have to handle root directories specially which are both volumes and directories
+	// but that is not how the node info reports them.  I am not sure how to check if the
+	// volume exists though.
+	if (mPath.length() == 2 && mPath.lastIndexOf(':') == 1){
+		return true;
+	}
+
+	VFSNodeInfo info;
+	bool nodeExists = this->_platform_getNodeInfo(info);
+
+	return nodeExists && info.mIsDirectory;
 }
 
 // VFSNodeInfo ---------------------------------------------------------------
